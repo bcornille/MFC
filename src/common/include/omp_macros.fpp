@@ -18,7 +18,7 @@
         #:assert (default == 'present' or default == 'none')
         #:if default == 'present'
             #! #:set default_val = 'defaultmap(present:aggregate) defaultmap(present:allocatable) defaultmap(present:pointer) '
-            #:set default_val = 'defaultmap(tofrom:aggregate) defaultmap(tofrom:allocatable) defaultmap(tofrom:pointer) '
+            #:set default_val = ''
         #:elif default == 'none'
             #:stop 'Not Supported Yet'
         #:endif
@@ -160,12 +160,9 @@
         & no_create_val.strip('\n') + present_val.strip('\n') + &
         & deviceptr_val.strip('\n') + attach_val.strip('\n')
     #! Hardcoding the parallelism for now
-    !#:set omp_directive = '!$omp target teams loop defaultmap(firstprivate:scalar) bind(teams,parallel) ' + &
-        !& clause_val + extraOmpArgs_val.strip('\n')
-    !#:set omp_end_directive = '!$omp end target teams loop'
-    #:set omp_directive = '!$omp target teams distribute parallel do simd defaultmap(firstprivate:scalar) ' + &
+    #:set omp_directive = '!$omp target teams distribute parallel do ' + &
         & clause_val + extraOmpArgs_val.strip('\n')
-    #:set omp_end_directive = '!$omp end target teams distribute parallel do simd'
+    #:set omp_end_directive = '!$omp end target teams distribute parallel do'
     $:omp_directive
     $:code
     $:omp_end_directive
@@ -184,7 +181,7 @@
     #:else
         #:set function_name_val = ''
     #:endif
-    #:set clause_val = nohost_val.strip('\n')
+    #:set clause_val = ''
     #:set omp_directive = '!$omp declare target ' + &
         & clause_val + extraOmpArgs_val.strip('\n')
     $:omp_directive
